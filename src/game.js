@@ -1,31 +1,50 @@
-const GameBoard = () => {
+import {ShipFactory} from './ship'
+
+const GameBoardFactory = () => {
     let rows = new Array(10).fill(new Array(10).fill(false))
+    let ships = []
 
     const addShip = (length, coordinates, direction) => {
-        let success = false
+        let success = null
 
-        if (coordinates.x != null && coordinates.y != null && coordinates.x >= 0 && coordinates.x <= 10 && coordinates.y >= 0 && coordinates.y <= 10) {
-            switch (direction) {
-            case 'up':
-                success = true
-                break
-            case 'down':
-                success = true
-                break
-            case 'left':
-                success = true
-                break
-            case 'right':
-                success = true
-                break
-            default:
-                throw new Error('Invalid ship direction')
-            }
+        if (coordinates.x + length <= 10 && coordinates.y + length <= 10) {
+            let ship = ShipFactory(length)
+            ships.push({coordinates, ship, direction})
+            success = ship
         }
         return success
     }
 
-    return {addShip}
+    const receiveAttack = attackCoordinates => {
+        ships.forEach(placedShip => {
+            switch (placedShip.direction) {
+                case 'right':
+                    for (let i = 0; i < placedShip.ship.getLength(); i++) {
+                        if (((placedShip.coordinates.x + i) === attackCoordinates.x) && (placedShip.coordinates.y === attackCoordinates.y)) placedShip.ship.hit(i)
+                    }
+                    break
+                case 'left':
+                    for (let i = 0; i < placedShip.ship.getLength(); i++) {
+                        if (((placedShip.coordinates.x - i) === attackCoordinates.x) && (placedShip.coordinates.y === attackCoordinates.y)) placedShip.ship.hit(i)
+                    }
+                    break
+                case 'up':
+                    for (let i = 0; i < placedShip.ship.getLength(); i++) {
+                        if ((placedShip.coordinates.x === attackCoordinates.x) && ((placedShip.coordinates.y - i) === attackCoordinates.y)) placedShip.ship.hit(i)
+                    }
+                    break
+                case 'down':
+                    for (let i = 0; i < placedShip.ship.getLength(); i++) {
+                        if ((placedShip.coordinates.x === attackCoordinates.x) && ((placedShip.coordinates.y + i) === attackCoordinates.y)) placedShip.ship.hit(i)
+                    }
+                    break
+                default:
+                    break
+            }
+        })
+    }
+
+    return {addShip, receiveAttack}
 }
 
-export {GameBoard}
+export {GameBoardFactory}

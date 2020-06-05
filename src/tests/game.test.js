@@ -1,32 +1,23 @@
-import {GameBoard} from '../game'
+import {GameBoardFactory} from '../game'
 
-test('Places ship', () => {
-    expect(GameBoard().addShip(3, {x: 5, y: 5}, 'right')).toBe(true)
-    expect(GameBoard().addShip(3, {x: 5, y: 5}, 'left')).toBe(true)
-    expect(GameBoard().addShip(3, {x: 5, y: 5}, 'up')).toBe(true)
-    expect(GameBoard().addShip(3, {x: 5, y: 5}, 'down')).toBe(true)
+test('Misses ship', () => {
+    let board = GameBoardFactory()
+    let ship = board.addShip(5, {x: 0, y: 0}, 'right')
+    board.receiveAttack({x: 9, y: 9})
+    expect(ship.isSunk()).toBe(false)
 })
 
-test('Doesn\'t place ship outside of gameboard', () => {
-    expect(GameBoard().addShip(3, {x: 0, y: 11}, 'right')).toBe(false)
-    expect(GameBoard().addShip(3, {x: 11, y: 0}, 'left')).toBe(false)
-    expect(GameBoard().addShip(3, {x: 0, y: -1}, 'up')).toBe(false)
-    expect(GameBoard().addShip(3, {x: -1, y: 0}, 'down')).toBe(false)
-    expect(GameBoard().addShip(3, {x: -1, y: -1}, 'down')).toBe(false)
+test('Sinks ship', () => {
+    let board = GameBoardFactory()
+    let ship = board.addShip(3, {x: 5, y: 5}, 'down')
+    for (let i = 0; i < 3; i++) {
+        board.receiveAttack({x: 5, y: 5 + i})
+    }
+    expect(ship.isSunk()).toBe(true)
 })
 
-test('Doesn\'t place ship with empty coordinates', () => {
-    expect(GameBoard().addShip(3, {}, 'right')).toBe(false)
-    expect(GameBoard().addShip(3, {x: null, y: 1}, 'right')).toBe(false)
-    expect(GameBoard().addShip(3, {x: 1, y: null}, 'right')).toBe(false)
-    expect(GameBoard().addShip(3, {x: undefined, y: 1}, 'right')).toBe(false)
-    expect(GameBoard().addShip(3, {x: 1, y: undefined}, 'right')).toBe(false)
-    
-})
-
-test('Doesn\'t place ship inappropriately', () => {
-    expect(GameBoard().addShip(10, {x: 5, y: 5}, 'right')).toBe(false)
-    expect(GameBoard().addShip(10, {x: 5, y: 5}, 'left')).toBe(false)
-    expect(GameBoard().addShip(10, {x: 5, y: 5}, 'up')).toBe(false)
-    expect(GameBoard().addShip(10, {x: 5, y: 5}, 'down')).toBe(false)
+test('Doesn\'t overlap ships', () => {
+    let board = GameBoardFactory()
+    board.addShip(3, {x: 5, y: 5}, 'down')
+    expect(board.addShip(3, {x: 4, y: 6}, 'right')).toBe(null)
 })

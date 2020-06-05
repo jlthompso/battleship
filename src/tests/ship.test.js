@@ -1,6 +1,6 @@
 import {ShipFactory} from '../ship'
 
-test('Creates ship', () => {
+test('Correct ship length', () => {
     expect(ShipFactory(4).getLength()).toBe(4)
 })
 
@@ -16,13 +16,4 @@ test('Sinks ship', () => {
         ship.hit(i)
     }
     expect(ship.isSunk()).toBe(true)
-})
-
-test('Rejects invalid lengths', () => {
-    expect(() => {ShipFactory(0)}).toThrow()
-    expect(() => {ShipFactory(1)}).toThrow()
-    expect(() => {ShipFactory(-1)}).toThrow()
-    expect(() => {ShipFactory(null)}).toThrow()
-    expect(() => {ShipFactory()}).toThrow()
-    expect(() => {ShipFactory(undefined)}).toThrow()
 })

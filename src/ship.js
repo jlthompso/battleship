@@ -1,6 +1,4 @@
 const ShipFactory = length => {
-    if (!(length > 1 && length <= 10)) throw new Error('Invalid ship length')
-
     let squares = new Array(length).fill(false)
 
     const getLength = () => length
