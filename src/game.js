@@ -13,6 +13,33 @@ const GameBoardFactory = () => {
     const addShip = (length, coordinates, direction) => {
         if ((direction === 'right' && coordinates.x + length > 10) || (direction === 'left' && coordinates.x - length < 0) || (direction === 'up' && coordinates.y + length < 0) || (direction === 'down' && coordinates.y - length > 10)) return 'invalid'
 
+        for (let i = 0; i < length; i++) {
+            switch (direction) {
+                case 'right':
+                    for (let i = 0; i < length; i++) {
+                        if (typeof(grid[coordinates.x + i][coordinates.y]) === 'object') return 'occupied'
+                    }
+                    break
+                case 'left':
+                    for (let i = 0; i < length; i++) {
+                        if (typeof(grid[coordinates.x - i][coordinates.y]) === 'object') return 'occupied'
+                    }
+                    break
+                case 'up':
+                    for (let i = 0; i < length; i++) {
+                        if (typeof(grid[coordinates.x][coordinates.y - i]) === 'object') return 'occupied'
+                    }
+                    break
+                case 'down':
+                    for (let i = 0; i < length; i++) {
+                        if (typeof(grid[coordinates.x][coordinates.y + i]) === 'object') return 'occupied'
+                    }
+                    break
+                default:
+                    break
+            }
+        }
+
         let ship = ShipFactory(length)
         ships.push({coordinates, ship, direction})
         switch (direction) {
@@ -50,20 +77,20 @@ const GameBoardFactory = () => {
         } else if (target === 'miss' || target === 'hit') {
             return 'duplicate'
         } else {
-            ships.forEach(placedShip => {
-                if (placedShip.ship === target) {
-                    switch (placedShip.direction) {
+            ships.forEach(placement => {
+                if (placement.ship === target) {
+                    switch (placement.direction) {
                         case 'right':
-                            target.hit(attackCoordinates.x - placedShip.coordinates.x)
+                            target.hit(attackCoordinates.x - placement.coordinates.x)
                             break
                         case 'left':
-                            target.hit(placedShip.coordinates.x - attackCoordinates.x)
+                            target.hit(placement.coordinates.x - attackCoordinates.x)
                             break
                         case 'up':
-                            target.hit(placedShip.coordinates.y - attackCoordinates.y)
+                            target.hit(placement.coordinates.y - attackCoordinates.y)
                             break
                         case 'down':
-                            target.hit(attackCoordinates.y - placedShip.coordinates.y)
+                            target.hit(attackCoordinates.y - placement.coordinates.y)
                             break
                         default:
                             break
@@ -74,7 +101,15 @@ const GameBoardFactory = () => {
         }
     }
 
-    return {addShip, receiveAttack}
+    const remainingShips = () => {
+        let count = 0
+        ships.forEach(placement => {
+            if (!placement.ship.isSunk()) count++
+        })
+        return count
+    }
+
+    return {addShip, receiveAttack, remainingShips}
 }
 
 export {GameBoardFactory}
