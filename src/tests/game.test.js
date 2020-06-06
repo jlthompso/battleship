@@ -21,3 +21,9 @@ test('Doesn\'t overlap ships', () => {
     board.addShip(3, {x: 5, y: 5}, 'down')
     expect(board.addShip(3, {x: 4, y: 6}, 'right')).toBe(null)
 })
+
+test('Rejects repeat attack', () => {
+    let board = GameBoardFactory()
+    board.receiveAttack({x: 5, y: 5})
+    expect(board.receiveAttack({x: 5, y: 5})).toBe(false)
+})
