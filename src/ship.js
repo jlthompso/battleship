@@ -1,4 +1,4 @@
-const ShipFactory = length => {
+export const ShipFactory = length => {
     let squares = new Array(length).fill(false)
 
     const getLength = () => length
@@ -20,5 +20,3 @@ const ShipFactory = length => {
 
     return {isSunk, getLength, hit}
 }
-
-export {ShipFactory}
