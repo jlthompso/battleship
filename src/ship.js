@@ -1,4 +1,4 @@
-export const ShipFactory = length => {
+const ShipFactory = length => {
     let squares = new Array(length).fill(false)
 
     const getLength = () => length
@@ -20,3 +20,5 @@ export const ShipFactory = length => {
 
     return {isSunk, getLength, hit}
 }
+
+export default ShipFactory

@@ -1,4 +1,4 @@
-import {GameBoardFactory} from '../game'
+import GameBoardFactory from '../game'
 
 test('Misses ship', () => {
     let board = GameBoardFactory()

@@ -1,6 +1,6 @@
-import {ShipFactory} from './ship'
+import ShipFactory from './ship'
 
-export const GameBoardFactory = () => {
+const GameBoardFactory = () => {
     let grid = []
     for (let i = 0; i < 10; i++) {
         grid.push([])
@@ -109,5 +109,9 @@ export const GameBoardFactory = () => {
         return count
     }
 
-    return {addShip, receiveAttack, remainingShips}
+    const getState = () => grid
+
+    return {addShip, receiveAttack, remainingShips, getState}
 }
+
+export default GameBoardFactory

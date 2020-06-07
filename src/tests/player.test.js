@@ -1,4 +1,4 @@
-import {PlayerFactory} from '../player'
+import PlayerFactory from '../player'
 
 test('Formats player name', () => {
     expect(PlayerFactory('jOhn smITh*', 'user').getName()).toBe('John Smith*')

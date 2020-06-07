@@ -1,4 +1,4 @@
-export const PlayerFactory = (name, type) => {
+const PlayerFactory = (name, type) => {
     let score = 0
 
     const addPoint = () => score++
@@ -16,3 +16,5 @@ export const PlayerFactory = (name, type) => {
 
     return {getName, addPoint, getScore, isBot}
 }
+
+export default PlayerFactory
