@@ -5,7 +5,7 @@ const GameBoardFactory = () => {
     for (let i = 0; i < 10; i++) {
         grid.push([])
         for (let j = 0; j < 10; j++) {
-            grid[i].push('empty')
+            grid[i].push(' ')
         }
     }
     let ships = []
@@ -71,10 +71,10 @@ const GameBoardFactory = () => {
 
     const receiveAttack = attackCoordinates => {
         let target = grid[attackCoordinates.x][attackCoordinates.y]
-        if (target === 'empty') {
-            grid[attackCoordinates.x][attackCoordinates.y] = 'miss'
+        if (target === ' ') {
+            grid[attackCoordinates.x][attackCoordinates.y] = '/'
             return 'miss'
-        } else if (target === 'miss' || target === 'hit') {
+        } else if (target === '/' || target === 'X') {
             return 'duplicate'
         } else {
             ships.forEach(placement => {
@@ -82,15 +82,19 @@ const GameBoardFactory = () => {
                     switch (placement.direction) {
                         case 'right':
                             target.hit(attackCoordinates.x - placement.coordinates.x)
+                            grid[attackCoordinates.x][attackCoordinates.y] = 'X'
                             break
                         case 'left':
                             target.hit(placement.coordinates.x - attackCoordinates.x)
+                            grid[attackCoordinates.x][attackCoordinates.y] = 'X'
                             break
                         case 'up':
                             target.hit(placement.coordinates.y - attackCoordinates.y)
+                            grid[attackCoordinates.x][attackCoordinates.y] = 'X'
                             break
                         case 'down':
                             target.hit(attackCoordinates.y - placement.coordinates.y)
+                            grid[attackCoordinates.x][attackCoordinates.y] = 'X'
                             break
                         default:
                             break
