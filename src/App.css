@@ -65,3 +65,27 @@ body {
   height: 30px;
   width: 30px;
 }
+
+.emptyGridSquare {
+  height: 28px;
+  width: 28px;
+  background-color: lightgray;
+  border-style: solid;
+  border-color: #282c34;
+  border-width: 1px;
+  color: black;
+  line-height: 28px;
+  font-size: .6em;
+}
+
+.occupiedGridSquare {
+  height: 28px;
+  width: 28px;
+  background-color: green;
+  border-style: solid;
+  border-color: #282c34;
+  border-width: 1px;
+  color: black;
+  line-height: 28px;
+  font-size: .6em;
+}

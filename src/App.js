@@ -17,25 +17,40 @@ class Game extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {}
-    this.state.player1 = {player: PlayerFactory('joe', 'user'), gameboard: GameBoardFactory()}
-    this.state.player2 = {player: PlayerFactory('b@tt13 b0t', 'bot'), gameboard: GameBoardFactory()}
+    this.state = {playerIsNext: false}
 
-    this.state.player2.gameboard.addShip(5, {x: 0, y: 0}, 'right')
+    this.players = []
+    this.players.push({player: PlayerFactory('joe', 'user'), gameboard: GameBoardFactory()})
+    this.players.push({player: PlayerFactory('b@tt13 b0t', 'bot'), gameboard: GameBoardFactory()})
+
+    this.players[0].gameboard.addShip(5, {x: 0, y: 0}, 'right')
+    this.players[0].gameboard.addShip(3, {x: 5, y: 5}, 'down')
+
+    this.players[1].gameboard.addShip(5, {x: 0, y: 0}, 'right')
+    this.players[1].gameboard.addShip(3, {x: 5, y: 5}, 'down')
   }
 
   handleClick (x, y) {
-    this.state.player2.gameboard.receiveAttack({x, y})
-    this.forceUpdate()
+    this.players[1].gameboard.receiveAttack({x, y})
+    this.setState({playerIsNext: !this.state.playerIsNext})
   }
 
   render () {
-    let enemySquares = []
-    for (let x = 0; x < this.state.player2.gameboard.getState().length; x++) {
-      for (let y = 0; y < this.state.player2.gameboard.getState()[x].length; y++) {
-        enemySquares.push(<EnemySquare
-          value={this.state.player2.gameboard.getState()[x][y]}
+    let enemyGrid = []
+    for (let x = 0; x < this.players[1].gameboard.getState().length; x++) {
+      for (let y = 0; y < this.players[1].gameboard.getState()[x].length; y++) {
+        enemyGrid.push(<EnemySquare
+          value={this.players[1].gameboard.getState()[x][y]}
           onClick={() => this.handleClick(x, y)}
+        />)
+      }
+    }
+
+    let playerGrid = []
+    for (let x = 0; x < this.players[0].gameboard.getState().length; x++) {
+      for (let y = 0; y < this.players[0].gameboard.getState()[x].length; y++) {
+        playerGrid.push(<PlayerSquare
+          value={this.players[0].gameboard.getState()[x][y]}
         />)
       }
     }
@@ -45,14 +60,16 @@ class Game extends React.Component {
         <div className='gameboard'>
           <h2>Your Ships</h2>
           <div className='grid'>
-
+            {playerGrid}
           </div>
+          <h4>Remaining Ships: {this.players[0].gameboard.remainingShips()}</h4>
         </div>
         <div className='gameboard'>
           <h2>Enemy Ships</h2>
           <div className='grid'>
-            {enemySquares}
+            {enemyGrid}
           </div>
+          <h4>Remaining Ships: {this.players[1].gameboard.remainingShips()}</h4>
         </div>
       </div>
     )
@@ -64,6 +81,14 @@ function EnemySquare (props) {
     <button className='gridButton' onClick={() => props.onClick()}>
       {typeof(props.value) === 'object' ? ' ' : props.value}
     </button>
+  )
+}
+
+function PlayerSquare (props) {
+  return (
+    <div className={typeof(props.value) === 'object' ? 'occupiedGridSquare' : 'emptyGridSquare'}>
+      {typeof(props.value) === 'object' ? ' ' : props.value}
+    </div>
   )
 }
 
