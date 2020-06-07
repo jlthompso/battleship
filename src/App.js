@@ -7,10 +7,8 @@ import PlayerFactory from './player'
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Game />
-      </header>
+      <img src={logo} className="App-logo" alt="logo" />
+      <Game />
     </div>
   )
 }
@@ -18,72 +16,59 @@ function App() {
 class Game extends React.Component {
   constructor(props) {
     super(props)
-    this.gameBoard = GameBoardFactory()
-    this.players = []
-    this.players.push(PlayerFactory('joe', 'user'))
-    this.players.push(PlayerFactory('b@tt13 b0t', 'bot'))
-    this.state = {squares: this.gameBoard.getState()}
+    this.players = [
+      {gameboard: GameBoardFactory(), player: PlayerFactory('joe', 'user')},
+      {gameboard: GameBoardFactory(), player: PlayerFactory('b@tt13 b0t', 'bot')}
+    ]
+
+    this.state = {
+      player: this.players[0].gameboard.getState(),
+      enemy: this.players[1].gameboard.getState() 
+    }
   }
 
-  renderSquare (x, y) {
-    return(
-      <Square
-        value = {this.state.squares[x][y]}
-      />
+  renderSquare (player, x, y, displayStyle) {
+    switch (displayStyle) {
+      case 'player':
+        return(
+          <PlayerSquare
+            value = {player[x][y]}
+          />
+        )
+      case 'enemy':
+        return(
+          <EnemySquare
+            value = {player[x][y]}
+          />
+        )
+      default:
+        break
+    }
+  }
+
+  renderRow (player, x, displayStyle) {
+    return (
+      <div className='row'>
+        {player[x].map((value, index) => {
+          return this.renderSquare(player, x, index, displayStyle)
+        })}
+      </div>
     )
   }
 
   render () {
     return (
-      <div>
-        <div className='row'>
-          {this.state.squares[0].map((value, index) => {
-            return this.renderSquare(index)
+      <div className='container'>
+        <div className='gameboard'>
+          <div className='playerHeader'>Your Ships</div>
+          {this.state.player.map((value, index) => {
+            return this.renderRow(this.state.player, index, 'player')
           })}
         </div>
-        <div className='row'>
-          {this.state.squares[1].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[2].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[3].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[4].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[5].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[6].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[7].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[8].map((value, index) => {
-            return this.renderSquare(index)
-          })}
-        </div>
-        <div className='row'>
-          {this.state.squares[9].map((value, index) => {
-            return this.renderSquare(index)
+        <div className='gameboard'>
+          <div className='playerHeader'>Enemy Ships</div>
+          {this.state.enemy.map((value, index) => {
+            return this.renderRow(this.state.player, index, 'enemy')
           })}
         </div>
       </div>
@@ -91,10 +76,18 @@ class Game extends React.Component {
   }
 }
 
-class Square extends React.Component {
+class EnemySquare extends React.Component {
   render () {
     return (
-      <button className='square'></button>
+      <button className='enemySquare'></button>
+    )
+  }
+}
+
+class PlayerSquare extends React.Component {
+  render () {
+    return (
+      <div className='playerSquare'></div>
     )
   }
 }
