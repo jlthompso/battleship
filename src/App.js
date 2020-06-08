@@ -23,23 +23,43 @@ class Game extends React.Component {
     this.players.push({player: PlayerFactory('joe', 'user'), gameboard: GameBoardFactory()})
     this.players.push({player: PlayerFactory('b@tt13 b0t', 'bot'), gameboard: GameBoardFactory()})
 
-    this.players[0].gameboard.addShip(5, {x: 0, y: 0}, 'right')
-    this.players[0].gameboard.addShip(3, {x: 5, y: 5}, 'down')
+    this.fleet = [5, 4, 3, 2, 2, 1, 1]
 
-    this.players[1].gameboard.addShip(5, {x: 0, y: 0}, 'right')
-    this.players[1].gameboard.addShip(3, {x: 5, y: 5}, 'down')
+    for (let i = 0; i < this.fleet.length; i++) {
+      while(!this.placeRandomShip(0, this.fleet[i])) {}
+      while(!this.placeRandomShip(1, this.fleet[i])) {}
+    }
+    
+    for (let i = 0; i < this.players[0].gameboard.getState().length; i++) {
+      console.log(this.players[0].gameboard.getState()[i].length)
+    }
   }
 
   handleClick (x, y) {
     if (this.players[1].gameboard.receiveAttack({x, y}) !== 'duplicate') {
       this.setState({playerIsNext: !this.state.playerIsNext})
-    while (this.players[0].gameboard.receiveAttack({x: this.getRandomInt(10), y: this.getRandomInt(10)}) === 'duplicate')
+    if (!this.players[1].gameboard.remainingShips()) {
+      alert(`${this.players[0].player.getName()} wins!`)
+      window.location.reload()
+    }
+    while (this.players[0].gameboard.receiveAttack({x: this.getRandomInt(10), y: this.getRandomInt(10)}) === 'duplicate') {}
+    if (!this.players[0].gameboard.remainingShips()) {
+      alert(`${this.players[1].player.getName()} wins!`)
+      window.location.reload()
+    }
     this.setState({playerIsNext: !this.state.playerIsNext})
     }
   }
 
   getRandomInt (max) {
     return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  placeRandomShip (player, length) {
+    let x = this.getRandomInt(10)
+    let y = this.getRandomInt(10)
+    let directions = ['up', 'down', 'right', 'left']
+    return typeof(this.players[player].gameboard.addShip(length, {x, y}, directions[this.getRandomInt(4)])) === 'object'
   }
 
   render () {

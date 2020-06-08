@@ -11,7 +11,7 @@ const GameBoardFactory = () => {
     let ships = []
 
     const addShip = (length, coordinates, direction) => {
-        if ((direction === 'right' && coordinates.x + length > 10) || (direction === 'left' && coordinates.x - length < 0) || (direction === 'up' && coordinates.y + length < 0) || (direction === 'down' && coordinates.y - length > 10)) return 'invalid'
+        if ((direction === 'right' && coordinates.x + length > 10) || (direction === 'left' && coordinates.x - length < -1) || (direction === 'up' && coordinates.y - length < -1) || (direction === 'down' && coordinates.y + length > 10)) return 'invalid'
 
         for (let i = 0; i < length; i++) {
             switch (direction) {
