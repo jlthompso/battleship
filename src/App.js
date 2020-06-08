@@ -31,8 +31,15 @@ class Game extends React.Component {
   }
 
   handleClick (x, y) {
-    this.players[1].gameboard.receiveAttack({x, y})
+    if (this.players[1].gameboard.receiveAttack({x, y}) !== 'duplicate') {
+      this.setState({playerIsNext: !this.state.playerIsNext})
+    while (this.players[0].gameboard.receiveAttack({x: this.getRandomInt(10), y: this.getRandomInt(10)}) === 'duplicate')
     this.setState({playerIsNext: !this.state.playerIsNext})
+    }
+  }
+
+  getRandomInt (max) {
+    return Math.floor(Math.random() * Math.floor(max));
   }
 
   render () {
