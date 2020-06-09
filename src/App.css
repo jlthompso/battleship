@@ -26,6 +26,7 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .App-link {
@@ -42,7 +43,7 @@ body {
 }
 
 .gameboard {
-  margin: 50px;
+  margin: 25px 25px 0;
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -88,4 +89,23 @@ body {
   color: black;
   line-height: 28px;
   font-size: .6em;
+}
+
+.ship {
+  margin: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+th, td {
+  padding: 10px;
+  border-style: solid;
+  border-color: white;
+  border-width: 1px;
+}
+
+table {
+  border-collapse: collapse;
 }

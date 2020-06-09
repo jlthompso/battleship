@@ -98,6 +98,64 @@ class Game extends React.Component {
           </div>
           <h4>Remaining Ships: {this.players[1].gameboard.remainingShips()}</h4>
         </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Aircraft Carrier</th>
+              <th>Battleship</th>
+              <th>Cruiser</th>
+              <th>Destroyer</th>
+              <th>Submarine</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div className='ship' id='carrier1'>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+              </td>
+              <td>
+                <div className='ship' id='battleship1'>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+              </td>
+              <td>
+                <div className='ship' id='cruiser1'>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+              </td>
+              <td>
+                <div className='ship' id='destroyer1'>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+                <div className='ship' id='destroyer2'>
+                  <div className='occupiedGridSquare'></div>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+              </td>
+              <td>
+                <div className='ship' id='submaring1'>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+                <div className='ship' id='submaring1'>
+                  <div className='occupiedGridSquare'></div>
+                </div>
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
       </div>
     )
   }
