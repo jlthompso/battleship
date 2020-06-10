@@ -91,12 +91,19 @@ body {
   font-size: .6em;
 }
 
-.ship {
+.hShip, .vShip {
   margin: 15px;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+.hShip {
+  flex-direction: row;
+}
+
+.vShip {
+  flex-direction: column;
 }
 
 th, td {
@@ -107,5 +114,6 @@ th, td {
 }
 
 table {
+  width: 60%;
   border-collapse: collapse;
 }

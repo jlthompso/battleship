@@ -20,7 +20,7 @@ class Game extends React.Component {
     this.state = {playerIsNext: false}
 
     this.players = []
-    this.players.push({player: PlayerFactory('joe', 'user'), gameboard: GameBoardFactory()})
+    this.players.push({player: PlayerFactory(prompt('Enter player name'), 'user'), gameboard: GameBoardFactory()})
     this.players.push({player: PlayerFactory('b@tt13 b0t', 'bot'), gameboard: GameBoardFactory()})
 
     this.fleet = [5, 4, 3, 2, 2, 1, 1]
@@ -111,46 +111,21 @@ class Game extends React.Component {
           <tbody>
             <tr>
               <td>
-                <div className='ship' id='carrier1'>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                </div>
+                <Ship value='carrier' />
               </td>
               <td>
-                <div className='ship' id='battleship1'>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                </div>
+                <Ship value='battleship' />
               </td>
               <td>
-                <div className='ship' id='cruiser1'>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                </div>
+                <Ship value='cruiser' />
               </td>
               <td>
-                <div className='ship' id='destroyer1'>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                </div>
-                <div className='ship' id='destroyer2'>
-                  <div className='occupiedGridSquare'></div>
-                  <div className='occupiedGridSquare'></div>
-                </div>
+                <Ship value='destroyer' />
+                <Ship value='destroyer' />
               </td>
               <td>
-                <div className='ship' id='submaring1'>
-                  <div className='occupiedGridSquare'></div>
-                </div>
-                <div className='ship' id='submaring1'>
-                  <div className='occupiedGridSquare'></div>
-                </div>
+                <Ship value='submarine' />
+                <Ship value='submarine' />
               </td>
             </tr>
             
@@ -175,6 +150,53 @@ function PlayerSquare (props) {
       {typeof(props.value) === 'object' ? ' ' : props.value}
     </div>
   )
+}
+
+class Ship extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {shipIsHorizontal: true}
+
+    this.squares = []
+    this.length = null
+    switch(props.value) {
+      case 'carrier':
+        this.length = 5
+        break
+      case 'battleship':
+        this.length = 4
+        break
+      case 'cruiser':
+        this.length = 3
+        break
+      case 'destroyer':
+        this.length = 2
+        break
+      case 'submarine':
+        this.length = 1
+        break
+      default:
+        this.length = 0
+        break
+    }
+
+    for (let i = 0; i < this.length; i++) {
+      this.squares.push(<div className='occupiedGridSquare'></div>)
+    }
+  }
+
+  handleClick () {
+    this.setState({shipIsHorizontal: !this.state.shipIsHorizontal})
+  }
+
+  render () {
+    return (
+      <div className={this.state.shipIsHorizontal ? 'hShip' : 'vShip'} id={this.length} onClick={() => this.handleClick()} draggable='true'>
+        {this.squares}
+      </div>
+    )
+  }
 }
 
 export default App
