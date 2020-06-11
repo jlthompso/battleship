@@ -17,16 +17,20 @@ class Game extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {playerIsNext: false}
+    this.state = {
+      playerIsNext: false,
+      playerPlacedShips: 0
+    }
 
     this.players = []
-    this.players.push({player: PlayerFactory(prompt('Enter player name'), 'user'), gameboard: GameBoardFactory()})
+    let name
+    do {name = prompt('Enter player name')} while (!name)
+    this.players.push({player: PlayerFactory(name, 'user'), gameboard: GameBoardFactory()})
     this.players.push({player: PlayerFactory('b@tt13 b0t', 'bot'), gameboard: GameBoardFactory()})
 
     this.fleet = [5, 4, 3, 2, 2, 1, 1]
 
     for (let i = 0; i < this.fleet.length; i++) {
-      while(!this.placeRandomShip(0, this.fleet[i])) {}
       while(!this.placeRandomShip(1, this.fleet[i])) {}
     }
     
@@ -36,6 +40,8 @@ class Game extends React.Component {
   }
 
   handleClick (x, y) {
+    if (this.state.playerPlacedShips < 7) return
+
     if (this.players[1].gameboard.receiveAttack({x, y}) !== 'duplicate') {
       this.setState({playerIsNext: !this.state.playerIsNext})
     if (!this.players[1].gameboard.remainingShips()) {
@@ -62,6 +68,21 @@ class Game extends React.Component {
     return typeof(this.players[player].gameboard.addShip(length, {x, y}, directions[this.getRandomInt(4)])) === 'object'
   }
 
+  handleDrop (e) {
+    e.preventDefault()
+    let data = JSON.parse(e.dataTransfer.getData('text'))
+    let coordinates = JSON.parse(e.target.id)
+    let length = data.length
+    let id = data.id
+    let direction
+    data.className === 'hShip' ? direction = 'right' : direction = 'down'
+
+    if (typeof(this.players[0].gameboard.addShip(length, coordinates, direction)) === 'object') {
+      this.setState({playerPlacedShips: this.state.playerPlacedShips + 1})
+      document.getElementById(id).style.display = 'none'
+    }
+  }
+
   render () {
     let enemyGrid = []
     for (let x = 0; x < this.players[1].gameboard.getState().length; x++) {
@@ -78,6 +99,8 @@ class Game extends React.Component {
       for (let y = 0; y < this.players[0].gameboard.getState()[x].length; y++) {
         playerGrid.push(<PlayerSquare
           value={this.players[0].gameboard.getState()[x][y]}
+          onDrop={(e) => this.handleDrop(e)}
+          id={JSON.stringify({x, y})}
         />)
       }
     }
@@ -111,21 +134,21 @@ class Game extends React.Component {
           <tbody>
             <tr>
               <td>
-                <Ship value='carrier' />
+                <Ship value='carrier' id='carrier1'/>
               </td>
               <td>
-                <Ship value='battleship' />
+                <Ship value='battleship' id='battleship1'/>
               </td>
               <td>
-                <Ship value='cruiser' />
+                <Ship value='cruiser' id='cruiser1' />
               </td>
               <td>
-                <Ship value='destroyer' />
-                <Ship value='destroyer' />
+                <Ship value='destroyer' id='destroyer1' />
+                <Ship value='destroyer' id='destroyer2' />
               </td>
               <td>
-                <Ship value='submarine' />
-                <Ship value='submarine' />
+                <Ship value='submarine' id='submarine1' />
+                <Ship value='submarine' id='submarine2' />
               </td>
             </tr>
             
@@ -146,7 +169,7 @@ function EnemySquare (props) {
 
 function PlayerSquare (props) {
   return (
-    <div className={typeof(props.value) === 'object' ? 'occupiedGridSquare' : 'emptyGridSquare'}>
+    <div className={typeof(props.value) === 'object' ? 'occupiedGridSquare' : 'emptyGridSquare'} onDragOver={(e) => {e.preventDefault()}} onDrop={(e) => props.onDrop(e)} id={props.id}>
       {typeof(props.value) === 'object' ? ' ' : props.value}
     </div>
   )
@@ -190,9 +213,18 @@ class Ship extends React.Component {
     this.setState({shipIsHorizontal: !this.state.shipIsHorizontal})
   }
 
+  handleDrag (e) {
+    let data = JSON.stringify({
+      className: e.target.className,
+      length: this.length,
+      id: this.props.id
+    })
+    e.dataTransfer.setData('text', data)
+  }
+
   render () {
     return (
-      <div className={this.state.shipIsHorizontal ? 'hShip' : 'vShip'} id={this.length} onClick={() => this.handleClick()} draggable='true'>
+      <div className={this.state.shipIsHorizontal ? 'hShip' : 'vShip'} onClick={() => this.handleClick()} length={this.length} draggable='true' onDragStart={(e) => this.handleDrag(e)} id={this.props.id}>
         {this.squares}
       </div>
     )

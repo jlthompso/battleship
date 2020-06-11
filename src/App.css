@@ -113,7 +113,11 @@ th, td {
   border-width: 1px;
 }
 
+td {
+  height: 50px;
+}
+
 table {
-  width: 60%;
+  max-width: 850px;
   border-collapse: collapse;
 }
