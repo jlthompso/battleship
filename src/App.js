@@ -40,7 +40,10 @@ class Game extends React.Component {
   }
 
   handleClick (x, y) {
-    if (this.state.playerPlacedShips < 7) return
+    if (this.state.playerPlacedShips < 7) {
+      alert('Place all ships to start game.')
+      return
+    }
 
     if (this.players[1].gameboard.receiveAttack({x, y}) !== 'duplicate') {
       this.setState({playerIsNext: !this.state.playerIsNext})
@@ -107,53 +110,55 @@ class Game extends React.Component {
 
     return (
       <div id='container'>
-        <div className='gameboard'>
+        <div className='gameboard' id='player'>
           <h2>Your Ships</h2>
           <div className='grid'>
             {playerGrid}
           </div>
           <h4>Remaining Ships: {this.players[0].gameboard.remainingShips()}</h4>
         </div>
-        <div className='gameboard'>
+        <div className='gameboard' id='enemy'>
           <h2>Enemy Ships</h2>
           <div className='grid'>
             {enemyGrid}
           </div>
           <h4>Remaining Ships: {this.players[1].gameboard.remainingShips()}</h4>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Aircraft Carrier</th>
-              <th>Battleship</th>
-              <th>Cruiser</th>
-              <th>Destroyer</th>
-              <th>Submarine</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <Ship value='carrier' id='carrier1'/>
-              </td>
-              <td>
-                <Ship value='battleship' id='battleship1'/>
-              </td>
-              <td>
-                <Ship value='cruiser' id='cruiser1' />
-              </td>
-              <td>
-                <Ship value='destroyer' id='destroyer1' />
-                <Ship value='destroyer' id='destroyer2' />
-              </td>
-              <td>
-                <Ship value='submarine' id='submarine1' />
-                <Ship value='submarine' id='submarine2' />
-              </td>
-            </tr>
-            
-          </tbody>
-        </table>
+        <div id='ships'>
+          <table>
+            <thead>
+              <tr>
+                <th>Aircraft Carrier</th>
+                <th>Battleship</th>
+                <th>Cruiser</th>
+                <th>Destroyer</th>
+                <th>Submarine</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <Ship value='carrier' id='carrier1'/>
+                </td>
+                <td>
+                  <Ship value='battleship' id='battleship1'/>
+                </td>
+                <td>
+                  <Ship value='cruiser' id='cruiser1' />
+                </td>
+                <td>
+                  <Ship value='destroyer' id='destroyer1' />
+                  <Ship value='destroyer' id='destroyer2' />
+                </td>
+                <td>
+                  <Ship value='submarine' id='submarine1' />
+                  <Ship value='submarine' id='submarine2' />
+                </td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }
